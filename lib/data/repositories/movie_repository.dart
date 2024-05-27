@@ -2,6 +2,7 @@ import 'package:my_movie_app/data/mappers/mappers.dart';
 import 'package:my_movie_app/data/sources/remote/services/services.dart';
 import 'package:my_movie_app/domain/enums/movie_type.dart';
 import 'package:my_movie_app/domain/models/movie.dart';
+import 'package:my_movie_app/domain/models/movie_video.dart';
 import 'package:my_movie_app/domain/repositories/repositories.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
@@ -18,5 +19,11 @@ class MovieRepositoryImpl implements MovieRepository {
   Future<List<Movie>> searchMovies(String query) async {
     final response = await _movieService.searchMoviesResponse(query);
     return MovieMapper.fromGetMovieListResponseToDomain(response);
+  }
+
+  @override
+  Future<List<MovieVideo>> getMovieVideos(String movieId) async {
+    final response = await _movieService.getMovieVideoListResponse(movieId);
+    return MovieVideoMapper.fromGetMovieVideoListResponseToDomain(response);
   }
 }
