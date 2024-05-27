@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:my_movie_app/domain/models/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_movie_app/di.dart';
+import 'package:my_movie_app/domain/enums/movie_type.dart';
+import 'package:my_movie_app/presentation/ui/pages/landing_page/bloc/movie_list_by_filter_type_bloc.dart';
 
 import '../components/components.dart';
 
-class MovieListSection extends StatelessWidget {
-  final String title;
+class MovieListSection extends StatefulWidget {
+  final MovieFilterType filterType;
   const MovieListSection({
     super.key,
-    required this.title,
+    required this.filterType,
   });
+
+  @override
+  State<MovieListSection> createState() => _MovieListSectionState();
+}
+
+class _MovieListSectionState extends State<MovieListSection> {
+  late final MovieListByFilterTypeBloc _movieListByFilterTypeBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _movieListByFilterTypeBloc = getIt<MovieListByFilterTypeBloc>();
+    _movieListByFilterTypeBloc.add(FetchMovieListByFilterTypeEvent(widget.filterType));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,20 +35,34 @@ class MovieListSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
-            title,
+            widget.filterType.toReadableString,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         const SizedBox(height: 8.0),
         SizedBox(
           height: 200.0,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            itemCount: dummyMovies.length,
-            separatorBuilder: (context, index) => const SizedBox(width: 16.0),
-            itemBuilder: (context, index) {
-              return MovieListItem(movie: dummyMovies[index]);
+          child: BlocBuilder<MovieListByFilterTypeBloc, MovieListByFilterTypeState>(
+            bloc: _movieListByFilterTypeBloc,
+            builder: (context, state) {
+              if (state is MovieListByFilterTypeLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is MovieListByFilterTypeLoaded) {
+                return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  itemCount: state.movies.length,
+                  separatorBuilder: (context, index) => const SizedBox(width: 16.0),
+                  itemBuilder: (context, index) {
+                    return MovieListItem(movie: state.movies[index]);
+                  },
+                );
+              }
+              if (state is MovieListByFilterTypeError) {
+                return Center(child: Text(state.message));
+              }
+              return const SizedBox.shrink();
             },
           ),
         ),

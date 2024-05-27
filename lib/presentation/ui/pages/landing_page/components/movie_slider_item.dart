@@ -31,7 +31,7 @@ class MovieSliderItem extends StatelessWidget {
           children: [
             BasicCachedImage(
               imageUrl: movie.imageUrl,
-              width: MediaQuery.of(context).size.width * 0.3,
+              width: MediaQuery.of(context).size.width * 0.35,
               height: double.infinity,
               borderRadius: 8.0,
             ),
@@ -42,14 +42,17 @@ class MovieSliderItem extends StatelessWidget {
                 children: [
                   Text(
                     movie.title,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(
-                    movie.description,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    maxLines: 5,
+                  Flexible(
+                    child: Text(
+                      movie.description,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black54),
+                      maxLines: 7,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),

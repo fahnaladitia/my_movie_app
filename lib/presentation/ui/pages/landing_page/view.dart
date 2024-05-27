@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_movie_app/domain/enums/movie_type.dart';
 
 import 'sections/sections.dart';
 
@@ -28,11 +29,11 @@ class _LandingPageState extends State<LandingPage> {
             children: [
               MovieSliderSection(),
               SizedBox(height: 16.0),
-              MovieListSection(title: 'Now Playing'),
+              MovieListSection(filterType: MovieFilterType.popular),
               SizedBox(height: 16.0),
-              MovieListSection(title: 'Popular'),
+              MovieListSection(filterType: MovieFilterType.nowPlaying),
               SizedBox(height: 16.0),
-              MovieListSection(title: 'Top Rated'),
+              MovieListSection(filterType: MovieFilterType.topRated),
             ],
           ),
         ));
