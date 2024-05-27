@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_movie_app/di.dart';
+import 'package:my_movie_app/presentation/components/components.dart';
 import 'package:my_movie_app/presentation/ui/pages/search_movies_page/bloc/search_movies_bloc.dart';
 
 import 'components/components.dart';
@@ -64,7 +65,27 @@ class _SearchMoviesPageState extends State<SearchMoviesPage> {
           bloc: _searchMoviesBloc,
           builder: (context, state) {
             if (state is SearchMoviesLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return GridView.builder(
+                itemCount: 6,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
+                  bottom: 32,
+                ),
+                itemBuilder: (context, index) {
+                  return BasicShimmer.aspectRatio(
+                    aspectRatio: 0.7,
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  );
+                },
+              );
             }
             if (state is SearchMoviesError) {
               return Center(child: Text(state.message));
