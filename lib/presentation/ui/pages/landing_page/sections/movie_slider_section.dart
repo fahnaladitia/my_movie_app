@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_movie_app/di.dart';
 import 'package:my_movie_app/domain/enums/movie_type.dart';
 import 'package:my_movie_app/domain/models/models.dart';
+import 'package:my_movie_app/presentation/components/components.dart';
 import 'package:my_movie_app/presentation/ui/pages/landing_page/bloc/movie_list_by_filter_type_bloc.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
@@ -37,9 +38,15 @@ class _MovieSliderSectionState extends State<MovieSliderSection> {
       bloc: _movieListByFilterTypeBloc,
       builder: (context, state) {
         if (state is MovieListByFilterTypeLoading) {
-          return const SizedBox(
+          return SizedBox(
             height: 260,
-            child: Center(child: CircularProgressIndicator()),
+            child: FractionallySizedBox(
+              widthFactor: .9,
+              child: BasicShimmer.aspectRatio(
+                aspectRatio: 16 / 9,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
           );
         }
         if (state is MovieListByFilterTypeLoaded) {

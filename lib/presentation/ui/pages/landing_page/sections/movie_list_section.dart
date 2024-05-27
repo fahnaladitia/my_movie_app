@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_movie_app/di.dart';
 import 'package:my_movie_app/domain/enums/movie_type.dart';
+import 'package:my_movie_app/presentation/components/components.dart';
 import 'package:my_movie_app/presentation/ui/pages/landing_page/bloc/movie_list_by_filter_type_bloc.dart';
 
 import '../components/components.dart';
@@ -46,7 +47,19 @@ class _MovieListSectionState extends State<MovieListSection> {
             bloc: _movieListByFilterTypeBloc,
             builder: (context, state) {
               if (state is MovieListByFilterTypeLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  itemCount: 3,
+                  separatorBuilder: (context, index) => const SizedBox(width: 16.0),
+                  itemBuilder: (context, index) {
+                    return BasicShimmer.size(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: 200.0,
+                      borderRadius: BorderRadius.circular(8.0),
+                    );
+                  },
+                );
               }
               if (state is MovieListByFilterTypeLoaded) {
                 return ListView.separated(

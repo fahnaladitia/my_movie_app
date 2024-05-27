@@ -34,11 +34,11 @@ class BasicShimmer extends StatelessWidget {
           shimmer: SizedBox(
             width: width,
             height: height,
-            child: const Card(
+            child: Card(
               clipBehavior: Clip.antiAlias,
               elevation: 0.0,
               margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+              shape: RoundedRectangleBorder(borderRadius: borderRadius ?? BorderRadius.zero),
             ),
           ),
         );
