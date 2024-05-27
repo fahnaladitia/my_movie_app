@@ -1,4 +1,4 @@
-part of '../pages.dart';
+import 'package:flutter/material.dart';
 
 class NoFoundPage extends StatefulWidget {
   const NoFoundPage({super.key});

@@ -1,4 +1,4 @@
-part of '../pages.dart';
+import 'package:flutter/material.dart';
 
 class SearchMoviesPage extends StatefulWidget {
   const SearchMoviesPage({super.key});
