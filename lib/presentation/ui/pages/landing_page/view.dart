@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_movie_app/domain/enums/movie_type.dart';
+import 'package:my_movie_app/presentation/app/routes/routes.dart';
 
 import 'sections/sections.dart';
 
@@ -19,7 +20,7 @@ class _LandingPageState extends State<LandingPage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.search),
-              onPressed: () {},
+              onPressed: () => Navigator.pushNamed(context, RoutePage.SEARCH_MOVIES),
             ),
           ],
         ),
