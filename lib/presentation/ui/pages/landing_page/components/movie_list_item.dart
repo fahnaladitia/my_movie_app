@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_movie_app/domain/models/models.dart';
 import 'package:my_movie_app/presentation/components/components.dart';
+import 'package:my_movie_app/presentation/ui/bottomsheets/movie_detail_bottomsheet/view.dart';
 
 class MovieListItem extends StatelessWidget {
   final Movie movie;
@@ -12,7 +13,7 @@ class MovieListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => showMovieDetailBottomsheet(context, movie: movie),
       child: Container(
         color: Colors.white,
         width: MediaQuery.of(context).size.width * 0.3,

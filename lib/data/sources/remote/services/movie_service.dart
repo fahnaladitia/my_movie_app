@@ -51,4 +51,23 @@ class MovieService extends BaseService {
       );
     }
   }
+
+  Future<GetMovieVideoListResponse> getMovieVideoListResponse(String movieId) async {
+    try {
+      final response = await dio.get(
+        '/movie/$movieId/videos',
+        options: applyOptions(headers: _headers(AppConstants.movieDBApiToken)),
+      );
+
+      return GetMovieVideoListResponse.fromMap(response.data);
+    } on DioException catch (e) {
+      throw exceptionHandler(
+        e,
+        onBadResponse: (data) {
+          final errorResponse = TheMovieDbErrorResponse.fromMap(data);
+          return errorResponse.statusMessage;
+        },
+      );
+    }
+  }
 }

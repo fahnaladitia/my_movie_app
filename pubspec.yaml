@@ -50,6 +50,8 @@ dependencies:
   flutter_bloc: ^8.1.5
   bloc_concurrency: ^0.2.5
   stream_transform: ^2.1.0
+  youtube_player_flutter: ^9.0.1
+  collection: ^1.18.0
   
 
 dev_dependencies:
