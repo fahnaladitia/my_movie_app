@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 class GetMovieListResponse {
-  GetMovieListResponseDates? dates;
   int? page;
   List<GetMovieListResponseResult>? results;
   int? totalPages;
   int? totalResults;
 
   GetMovieListResponse({
-    this.dates,
     this.page,
     this.results,
     this.totalPages,
@@ -20,7 +18,6 @@ class GetMovieListResponse {
   String toJson() => json.encode(toMap());
 
   factory GetMovieListResponse.fromMap(Map<String, dynamic> json) => GetMovieListResponse(
-        dates: json["dates"] == null ? null : GetMovieListResponseDates.fromMap(json["dates"]),
         page: json["page"],
         results: json["results"] == null
             ? []
@@ -30,37 +27,10 @@ class GetMovieListResponse {
       );
 
   Map<String, dynamic> toMap() => {
-        "dates": dates?.toMap(),
         "page": page,
         "results": results == null ? [] : List<dynamic>.from(results!.map((x) => x.toMap())),
         "total_pages": totalPages,
         "total_results": totalResults,
-      };
-}
-
-class GetMovieListResponseDates {
-  DateTime? maximum;
-  DateTime? minimum;
-
-  GetMovieListResponseDates({
-    this.maximum,
-    this.minimum,
-  });
-
-  factory GetMovieListResponseDates.fromJson(String str) => GetMovieListResponseDates.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory GetMovieListResponseDates.fromMap(Map<String, dynamic> json) => GetMovieListResponseDates(
-        maximum: json["maximum"] == null ? null : DateTime.parse(json["maximum"]),
-        minimum: json["minimum"] == null ? null : DateTime.parse(json["minimum"]),
-      );
-
-  Map<String, dynamic> toMap() => {
-        "maximum":
-            "${maximum!.year.toString().padLeft(4, '0')}-${maximum!.month.toString().padLeft(2, '0')}-${maximum!.day.toString().padLeft(2, '0')}",
-        "minimum":
-            "${minimum!.year.toString().padLeft(4, '0')}-${minimum!.month.toString().padLeft(2, '0')}-${minimum!.day.toString().padLeft(2, '0')}",
       };
 }
 
@@ -74,7 +44,7 @@ class GetMovieListResponseResult {
   String? overview;
   double? popularity;
   String? posterPath;
-  DateTime? releaseDate;
+  String? releaseDate;
   String? title;
   bool? video;
   double? voteAverage;
@@ -111,7 +81,7 @@ class GetMovieListResponseResult {
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
         posterPath: json["poster_path"],
-        releaseDate: json["release_date"] == null ? null : DateTime.parse(json["release_date"]),
+        releaseDate: json["release_date"],
         title: json["title"],
         video: json["video"],
         voteAverage: json["vote_average"]?.toDouble(),
@@ -128,8 +98,7 @@ class GetMovieListResponseResult {
         "overview": overview,
         "popularity": popularity,
         "poster_path": posterPath,
-        "release_date":
-            "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",
+        "release_date": releaseDate,
         "title": title,
         "video": video,
         "vote_average": voteAverage,

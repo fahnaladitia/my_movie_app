@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_movie_app/di.dart';
+import 'package:my_movie_app/presentation/ui/pages/search_movies_page/bloc/search_movies_bloc.dart';
+
+import 'components/components.dart';
 
 class SearchMoviesPage extends StatefulWidget {
   const SearchMoviesPage({super.key});
@@ -8,8 +13,90 @@ class SearchMoviesPage extends StatefulWidget {
 }
 
 class _SearchMoviesPageState extends State<SearchMoviesPage> {
+  late final TextEditingController _searchController;
+  late final SearchMoviesBloc _searchMoviesBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchMoviesBloc = getIt<SearchMoviesBloc>();
+    _searchController = TextEditingController();
+
+    _searchMoviesBloc.add(const SearchMoviesEventSearch(''));
+    _searchController.addListener(() {
+      _searchMoviesBloc.add(SearchMoviesEventSearch(_searchController.text));
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: TextFormField(
+            controller: _searchController,
+            maxLines: 1,
+            decoration: InputDecoration(
+              hintText: 'Search movies',
+              hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey),
+              contentPadding: EdgeInsets.zero,
+              fillColor: Colors.grey[200],
+              filled: true,
+              prefixIcon: const Icon(Icons.search),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+            ),
+          ),
+        ),
+        body: BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
+          bloc: _searchMoviesBloc,
+          builder: (context, state) {
+            if (state is SearchMoviesLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is SearchMoviesError) {
+              return Center(child: Text(state.message));
+            }
+            if (state is SearchMoviesEmpty) {
+              return const Center(child: Text('No movies found'));
+            }
+            if (state is SearchMoviesLoaded) {
+              return GridView.builder(
+                itemCount: state.movies.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
+                  bottom: 32,
+                ),
+                itemBuilder: (context, index) {
+                  final movie = state.movies[index];
+                  return SearchMovieItem(movie: movie);
+                },
+              );
+            }
+            return const SizedBox();
+          },
+        ),
+      ),
+    );
   }
 }

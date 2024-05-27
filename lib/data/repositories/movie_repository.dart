@@ -13,4 +13,10 @@ class MovieRepositoryImpl implements MovieRepository {
     final response = await _movieService.getTopTwentyMoviesByFilterTypeResponse(type);
     return MovieMapper.fromGetMovieListResponseToDomain(response);
   }
+
+  @override
+  Future<List<Movie>> searchMovies(String query) async {
+    final response = await _movieService.searchMoviesResponse(query);
+    return MovieMapper.fromGetMovieListResponseToDomain(response);
+  }
 }
