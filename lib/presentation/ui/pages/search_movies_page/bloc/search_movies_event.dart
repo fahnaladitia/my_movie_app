@@ -18,3 +18,5 @@ final class SearchMoviesEventSearch extends SearchMoviesEvent {
   @override
   List<Object> get props => [query];
 }
+
+final class SearchMoviesEventLoadMore extends SearchMoviesEvent {}

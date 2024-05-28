@@ -32,11 +32,14 @@ class MovieService extends BaseService {
     }
   }
 
-  Future<GetMovieListResponse> searchMoviesResponse(String query) async {
+  Future<GetMovieListResponse> searchMoviesResponse({required String query, required int page}) async {
     try {
       final response = await dio.get(
         '/search/movie',
-        queryParameters: {'query': query},
+        queryParameters: {
+          'query': query,
+          'page': page,
+        },
         options: applyOptions(headers: _headers(AppConstants.movieDBApiToken)),
       );
 

@@ -16,12 +16,20 @@ class SearchMoviesPage extends StatefulWidget {
 class _SearchMoviesPageState extends State<SearchMoviesPage> {
   late final TextEditingController _searchController;
   late final SearchMoviesBloc _searchMoviesBloc;
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _searchMoviesBloc = getIt<SearchMoviesBloc>();
     _searchController = TextEditingController();
+    _scrollController = ScrollController();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        _searchMoviesBloc.add(SearchMoviesEventLoadMore());
+      }
+    });
 
     _searchMoviesBloc.add(const SearchMoviesEventSearch(''));
     _searchController.addListener(() {
@@ -32,6 +40,7 @@ class _SearchMoviesPageState extends State<SearchMoviesPage> {
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -61,7 +70,16 @@ class _SearchMoviesPageState extends State<SearchMoviesPage> {
             ),
           ),
         ),
-        body: BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
+        body: BlocConsumer<SearchMoviesBloc, SearchMoviesState>(
+          listener: (context, state) {
+            if (state is SearchMoviesError) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            }
+
+            if (state is SearchMoviesErrorMore) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            }
+          },
           bloc: _searchMoviesBloc,
           builder: (context, state) {
             if (state is SearchMoviesLoading) {
@@ -96,6 +114,7 @@ class _SearchMoviesPageState extends State<SearchMoviesPage> {
             if (state is SearchMoviesLoaded) {
               return GridView.builder(
                 itemCount: state.movies.length,
+                controller: _scrollController,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 0.7,
@@ -111,6 +130,90 @@ class _SearchMoviesPageState extends State<SearchMoviesPage> {
                 itemBuilder: (context, index) {
                   final movie = state.movies[index];
                   return SearchMovieItem(movie: movie);
+                },
+              );
+            }
+
+            if (state is SearchMoviesLoadingMore) {
+              return GridView.builder(
+                itemCount: state.movies.length + 1,
+                controller: _scrollController,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
+                  bottom: 32,
+                ),
+                itemBuilder: (context, index) {
+                  if (index < state.movies.length) {
+                    final movie = state.movies[index];
+                    return SearchMovieItem(movie: movie);
+                  }
+                  return BasicShimmer.aspectRatio(
+                    aspectRatio: 0.7,
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  );
+                },
+              );
+            }
+
+            if (state is SearchMoviesLoadedMore) {
+              return GridView.builder(
+                itemCount: state.movies.length,
+                controller: _scrollController,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
+                  bottom: 32,
+                ),
+                itemBuilder: (context, index) {
+                  final movie = state.movies[index];
+                  return SearchMovieItem(movie: movie);
+                },
+              );
+            }
+
+            if (state is SearchMoviesErrorMore) {
+              return GridView.builder(
+                itemCount: state.movies.length + 1,
+                controller: _scrollController,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
+                  bottom: 32,
+                ),
+                itemBuilder: (context, index) {
+                  if (index < state.movies.length) {
+                    final movie = state.movies[index];
+                    return SearchMovieItem(movie: movie);
+                  }
+                  // Retry Button
+                  return Center(
+                    child: ElevatedButton(
+                      onPressed: () => _searchMoviesBloc.add(SearchMoviesEventLoadMore()),
+                      child: const Text('Retry'),
+                    ),
+                  );
                 },
               );
             }

@@ -6,8 +6,11 @@ class SearchMoviesInteractor implements SearchMoviesUsecase {
   SearchMoviesInteractor(this._movieRepository);
 
   @override
-  Future<List<Movie>> execute(String param) {
-    final query = param.isEmpty ? 'a' : param;
-    return _movieRepository.searchMovies(query);
+  Future<MoviePages> execute(SearchMoviesParam param) {
+    final query = param.query.isEmpty ? 'a' : param.query;
+    return _movieRepository.searchMovies(
+      query: query,
+      page: param.page,
+    );
   }
 }
