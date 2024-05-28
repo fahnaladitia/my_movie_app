@@ -4,6 +4,9 @@ import '../models/models.dart';
 
 abstract class MovieRepository {
   Future<List<Movie>> topTwentyMoviesByFilterType(MovieFilterType type);
-  Future<List<Movie>> searchMovies(String query);
+  Future<MoviePages> searchMovies({
+    required String query,
+    required int page,
+  });
   Future<List<MovieVideo>> getMovieVideos(String movieId);
 }

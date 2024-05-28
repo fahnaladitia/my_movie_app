@@ -15,4 +15,22 @@ class MovieMapper {
         }).toList() ??
         [];
   }
+
+  static MoviePages fromGetMovieListResponseToDomainPages(GetMovieListResponse response) {
+    final list = response.results?.map((e) {
+          return Movie(
+            id: e.id?.toString() ?? '',
+            description: e.overview ?? '',
+            title: e.title ?? '',
+            posterPath: e.posterPath ?? '',
+          );
+        }).toList() ??
+        [];
+
+    return MoviePages(
+      movies: list,
+      page: response.page ?? 0,
+      totalPages: response.totalPages ?? 0,
+    );
+  }
 }
