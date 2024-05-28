@@ -1,16 +1,28 @@
-# my_movie_app
+## My Movie App
+This is a movie app that allows users to see a list of movies, see movie details, and play movie trailers.
 
-A new Flutter project.
+## List of Features
 
-## Getting Started
+### 1. Home / Movie List:
+- User can see a list of movies.
+- Type of movies: `Now Playing`, `Popular`, `Top Rated`, `Upcoming`.
 
-This project is a starting point for a Flutter application.
+### 2. Movie Detail Bottom Sheet:
+- User can see movie details.
+- User can play movie trailers if available (Youtube).
 
-A few resources to get you started if this is your first Flutter project:
+### 3. Search:
+- User can search for movies.
+- User can see search results.
+- Pagination is implemented.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Stack / Libraries Used:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Framework: Flutter
+- state management: bloc
+- network client: dio
+- dependency injection: get_it
+- image cache: cached_network_image
+- youtube player: youtube_player_flutter
+- logger: logger
+- carousel slider: carousel_slider
